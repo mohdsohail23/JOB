@@ -1,0 +1,6 @@
+C:\ASPSamples\ControlsDemo\ControlsDemo\bin\ControlsDemo.dll.config
+C:\ASPSamples\ControlsDemo\ControlsDemo\bin\ControlsDemo.dll
+C:\ASPSamples\ControlsDemo\ControlsDemo\bin\ControlsDemo.pdb
+C:\ASPSamples\ControlsDemo\ControlsDemo\obj\Debug\ControlsDemo.csprojResolveAssemblyReference.cache
+C:\ASPSamples\ControlsDemo\ControlsDemo\obj\Debug\ControlsDemo.dll
+C:\ASPSamples\ControlsDemo\ControlsDemo\obj\Debug\ControlsDemo.pdb
