@@ -1,0 +1,48 @@
+Protected Sub GridView2_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles GridView2.RowCommand
+        If e.CommandName = "approvecommand" Then
+            Dim CS As String = ConfigurationManager.ConnectionStrings("DBCS").ConnectionString
+            Using conn As New SqlConnection(CS)
+                Dim MyQuery As String = "Update DOC_PHistory set Status='APPROVED' where TokenNo=" & e.CommandArgument
+                Dim cmd As New SqlCommand(MyQuery, conn)
+                conn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
+
+            Try
+                Dim email, Adate, docname As String
+                Using conn As New SqlConnection(CS)
+                    Dim MyQuery As String = "select EmailID,AppointmentDate,DoctorName from DOC_PHistory where TokenNo=" & e.CommandArgument
+                    Dim cmd As New SqlCommand(MyQuery, conn)
+                    conn.Open()
+                    Dim rdr As SqlDataReader = cmd.ExecuteReader()
+                    If rdr.Read() Then
+                        email = rdr(0)
+                        Adate = rdr(1)
+                        docname = rdr(2)
+                    End If
+                End Using
+                sendmail(email, Adate, docname, e.CommandArgument)
+            Catch
+            End Try
+
+        End If
+        bindpendingdata()
+    End Sub
+
+    Public Sub sendmail(email As String, Adate As String, docname As String, token As String)
+        Dim Smtp_Server As New SmtpClient
+        Dim e_mail As New MailMessage()
+        Smtp_Server.UseDefaultCredentials = False
+        Smtp_Server.Credentials = New Net.NetworkCredential("m.sohailahmedlfc@gmail.com", "msa1414july12")
+        Smtp_Server.Port = 587
+        Smtp_Server.EnableSsl = True
+        Smtp_Server.Host = "smtp.gmail.com"
+
+        e_mail = New MailMessage()
+        e_mail.From = New MailAddress("sohail_ahmed@designmd.com")
+        e_mail.To.Add(email)
+        e_mail.Subject = "APPOINTMENT BOOKING CONFIRMATION"
+        e_mail.IsBodyHtml = False
+        e_mail.Body = "HI " & email & ", your appointment at KNG hospital with " & docname & " has been booked sucessfully for date : " & Adate & "   !!..your Token Number is " & token & "......GET WELL SOON!!!!"
+        Smtp_Server.Send(e_mail)
+    End Sub
