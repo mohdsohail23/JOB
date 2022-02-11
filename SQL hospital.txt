@@ -1,0 +1,130 @@
+use NORTHWND
+
+CREATE TABLE DOC_Patients(
+   PatientID int identity(1,1) ,
+   Password nvarchar(50) not null,
+   PName nvarchar(50),
+   EmailID nvarchar(50),
+   Age int,
+   Mobile nvarchar(50),
+   Address nvarchar(max),
+   Height nvarchar(50),
+   Weight nvarchar(50),
+   BloodGroup nvarchar(50),
+   ImageLink nvarchar(50),
+   Primary Key (PatientID)
+);
+
+--drop table DOC_Patients
+drop table DOC_PHistory
+
+
+select * from DOC_Patients
+
+CREATE TABLE DOC_PHistory(
+   EmailID nvarchar(50),
+   TokenNo nvarchar(50),
+   AppointmentDate nvarchar(50),
+   DoctorID int,
+   DoctorName nvarchar(50),
+   Status nvarchar(50),
+   Symptoms nvarchar(max),
+   Prescription nvarchar(max),
+   Primary Key (TokenNo)
+);
+
+select * from DOC_PHistory
+
+insert into DOC_Patients values('132','soh','abc@abc.com',23,'91234556456','asdffasf','12','12','A+','image')
+
+
+CREATE PROCEDURE DOCaddpatient      
+@Password nvarchar(50),@PName nvarchar(50),@Age int,@Mobile nvarchar(50),@EmailID nvarchar(50)  
+,@Address nvarchar(50),@Height nvarchar(50),@Weight nvarchar(50),@BloodGroup nvarchar(50),@ImageLink nvarchar(50)   
+AS      
+begin      
+insert into DOC_Patients values(@Password,@PName,@EmailID,@Age,@Mobile,@Address,@Height,@Weight,@BloodGroup,@ImageLink);      
+end
+
+Alter PROCEDURE DOCupdatepatient      
+@Password nvarchar(50),@PName nvarchar(50),@Age int,@Mobile nvarchar(50),@EmailID nvarchar(50)  
+,@Address nvarchar(50),@Height nvarchar(50),@Weight nvarchar(50),@BloodGroup nvarchar(50),@ImageLink nvarchar(50)   
+AS      
+begin      
+update DOC_Patients set Password=@Password,PName=@PName,Age=@Age,Mobile=@Mobile,Address=@Address,Height=@Height,Weight=@Weight,BloodGroup=@BloodGroup,ImageLink=@ImageLink where EmailID=@EmailID      
+end
+
+select * from DOC_Patients
+
+truncate table DOC_Patients
+
+select * from DOC_PHistory
+
+select DOC_PHistory.TokenNo ,DOC_Patients.PName as [Patient Name],DOC_PHistory.Status  from
+ DOC_PHistory full outer join DOC_Patients 
+on DOC_PHistory.EmailID=DOC_Patients.EmailID 
+where DoctorID=1
+
+truncate table DOC_PHistory
+insert into DOC_PHistory values('','','','','')
+
+select * from DOC_PHistory where EmailID='m.sohail414@gmail.com'
+
+update DOC_PHistory set Status='APPROVED'
+
+update DOC_Patients set Password='1111',PName='1111',Age=11,Mobile='1111',Address='1111',Height='1111',Weight='1111',BloodGroup='1111',ImageLink='1111' where EmailID='abc@abc.com'     
+
+CREATE TABLE DOC_Doctors(
+   DoctorID int identity(1,1),
+   DoctorName nvarchar(50),
+   Department nvarchar(50),
+   Primary Key (DoctorID)
+);
+--drop table DOC_Doctors
+select * from DOC_Doctors
+
+truncate table DOC_Doctors
+
+
+insert into DOC_Doctors values('Dr. Ajaz Ahmed','Cardiology'),('Dr. William','ENT(Ear, Nose and Throat)'),('Dr. Abdu','Elderly Service Department'),('Dr. Myles','Breast Screening')
+,('Dr. Arthur Reese','Gastroentrology'),('Dr. B. Abott','General Sergery'),('Dr. Naresh','Gynecology'),('Dr. Mark F Arron','Hematology')
+,('Dr. Sudhanshu Bhattacharya','Diebities'),('Dr. Corrie M','Nutrition'),('Dr. Mona','Neurology'),('Dr. H S Chabbra','Neonatal Unit')
+,('Dr. Sandeep Vishaya','Obstetrics and Gynecology Unit'),('Dr. Oberoi','Oncology'),('Dr. K. M. Khan','Physiotherapy'),('Dr. Ashok Seth','Renal Unit')
+,('Dr. Mohamed Rela','Urology'),('Dr. Dre','Mental Health'),('Dr. J. Klopp','Sports'),('Dr. Steven Strange','Magic')
+
+
+CREATE TABLE DOC_Admins(
+   DoctorLoginID nvarchar(50),
+   DoctorPassword nvarchar(50),
+   DoctorID int 
+);
+
+select * from DOC_Admins
+
+insert into DOC_Admins values('DAAC','DAAC',1),('DWENT','DWENT',2),('DAESD','DAESD',3),('DMBS','DMBS',4)
+,('DARG','DARG',5),('DBAGS','DBAGS',6),('DNG','DNG',7),('DMFAH','DMFAH',8)
+,('DSBD','DSBD',9),('DCMN','DCMN',10),('DMN','DMN',11),('DHSCNU','DHSCNU',12)
+,('DSVOGU','DSVOGU',13),('DOO','DOO',14),('DKMKP','DKMKP',15),('DASRU','DASRU',16)
+,('DMRU','DMRU',17),('DDMS','DDMS',18),('DJKS','DJKS',19),('DSSM','DSSM',20)
+
+select DoctorName from DOC_Doctors where DoctorID=1
+
+select DOC_PHistory.TokenNo ,DOC_PHistory.AppointmentDate ,DOC_Patients.PName ,DOC_PHistory.Status  from DOC_PHistory inner join DOC_Patients on DOC_PHistory.EmailID=DOC_Patients.EmailID where DoctorID=1 and Status not in ('PENDING','BOOKED')
+
+select DOC_PHistory.TokenNo ,DOC_PHistory.AppointmentDate ,DOC_Patients.PName ,DOC_PHistory.Status  from DOC_PHistory inner join DOC_Patients on DOC_PHistory.EmailID=DOC_Patients.EmailID where  DoctorID=1 and Status='APPROVED' and AppointmentDate='23-02-2022'
+
+CREATE TABLE DOC_Meds(
+  M_ID int identity(1,1),
+  MedName nvarchar(50),
+  MedContent nvarchar(50),
+  MedPrice nvarchar(50),
+  ImageLink nvarchar(50)
+);
+
+--drop table DOC_Meds
+
+select * from DOC_Meds
+
+truncate table DOC_Meds
+
+insert into DOC_Meds values('Omidin 10mg','Domperidon','20','~/Medimgs/defaultmed.png')
